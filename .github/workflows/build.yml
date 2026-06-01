@@ -1,32 +1,9 @@
-name: Build MoustacheClicker
-
-on: [push, pull_request]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential clang git
-          curl -LO https://github.com/theos/ldid/raw/master/ldid
-          chmod +x ldid
-          sudo mv ldid /usr/bin/
-          git clone --recursive https://github.com/theos/theos.git /home/runner/theos
-
-      - name: Build
+- name: Build
         run: |
           export THEOS=/home/runner/theos
           export PATH=$THEOS/bin:$PATH
+          # التوجه إلى المسار الرئيسي للمستودع قبل تنفيذ الأمر
+          cd $GITHUB_WORKSPACE
+          make clean
           make
           make package
-
-      - name: Upload
-        uses: actions/upload-artifact@v4
-        with:
-          name: package
-          path: packages/*.deb
