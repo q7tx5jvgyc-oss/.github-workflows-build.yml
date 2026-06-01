@@ -21,6 +21,10 @@ jobs:
         run: |
           export THEOS=/home/runner/theos
           export PATH=$THEOS/bin:$PATH
+          # هذا السطر هو الحل: التأكد من وجودنا في مجلد العمل الرئيسي
+          cd $GITHUB_WORKSPACE
+          # نستخدم ls للتحقق من وجود الملفات قبل البناء
+          ls -l Makefile
           make
           make package
 
