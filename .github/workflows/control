@@ -1,9 +1,8 @@
 Package: com.moustache.clicker
 Name: Moustache Clicker
-Depends: mobilesubstrate, preferenceloader
 Version: 1.0.0
 Architecture: iphoneos-arm
-Description: Professional Auto Clicker for Moustache
+Description: Professional Tweak
 Maintainer: Moustache
 Author: Moustache
 Section: Tweaks
