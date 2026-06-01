@@ -1,9 +1,31 @@
-- name: Build
+name: Build MoustacheClicker
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build
         run: |
           export THEOS=/home/runner/theos
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+          curl -LO https://github.com/theos/ldid/raw/master/ldid
+          chmod +x ldid
+          sudo mv ldid /usr/bin/ldid
           export PATH=$THEOS/bin:$PATH
-          # التوجه إلى المسار الرئيسي للمستودع قبل تنفيذ الأمر
-          cd $GITHUB_WORKSPACE
-          make clean
           make
           make package
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: packages/*.deb
