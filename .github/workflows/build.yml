@@ -1,10 +1,6 @@
 name: Build MoustacheClicker
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -13,24 +9,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Theos
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential clang git
-          curl -LO https://github.com/theos/ldid/raw/master/ldid
-          chmod +x ldid
-          sudo mv ldid /usr/bin/
+          sudo apt-get install -y build-essential clang git ldid
           git clone --recursive https://github.com/theos/theos.git /home/runner/theos
 
-      - name: Build Tweak
+      - name: Build
         run: |
           export THEOS=/home/runner/theos
           export PATH=$THEOS/bin:$PATH
           make
           make package
 
-      - name: Upload Artifact
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: MoustacheClicker_Deb
+          name: package
           path: packages/*.deb
