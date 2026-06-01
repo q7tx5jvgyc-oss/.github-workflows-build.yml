@@ -1,12 +1,8 @@
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 %hook SpringBoard
 - (void)applicationDidFinishLaunching:(id)application {
     %orig;
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Moustache" 
-        message:@"Tweak Loaded Successfully!" 
-        preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+    NSLog(@"Moustache: Tweak Loaded Successfully!");
 }
 %end
