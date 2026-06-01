@@ -1,39 +1,8 @@
-name: Build MoustacheClicker
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Theos
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential clang git
-          # تحميل أداة التوقيع ldid ومعالجتها لتكون قابلة للتنفيذ
-          curl -LO https://github.com/theos/ldid/raw/master/ldid
-          chmod +x ldid
-          sudo mv ldid /usr/bin/
-          # تحميل بيئة Theos بالكامل
-          git clone --recursive https://github.com/theos/theos.git /home/runner/theos
-
-      - name: Build Tweak
+- name: Build Tweak
         run: |
           export THEOS=/home/runner/theos
           export PATH=$THEOS/bin:$PATH
-          # بناء الأداة مباشرة بدون استخدام make clean لتجنب الأخطاء
+          # التأكد من تحديث القوالب قبل البناء
+          make clean || true
           make
           make package
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: MoustacheClicker_Deb
-          path: packages/*.deb
