@@ -49,3 +49,35 @@ void showMenu() {
     
     [menuWindow makeKeyAndVisible];
 }
+NSTimer *clickTimer;
+
+void startClicking(float speed) {
+    if (clickTimer) [clickTimer invalidate];
+    // التكرار بناءً على السرعة
+    clickTimer = [NSTimer scheduledTimerWithTimeInterval:speed 
+        repeats:YES block:^(NSTimer *timer) {
+        // هنا يتم استدعاء دالة simulateTap(lastLocation)
+    }];
+}
+
+void stopClicking() {
+    [clickTimer invalidate];
+    clickTimer = nil;
+}
+NSMutableArray *targets = [[NSMutableArray alloc] init];
+
+void addNewTarget(CGPoint location) {
+    DragView *newTarget = [[DragView alloc] initWithFrame:CGRectMake(location.x, location.y, 50, 50)];
+    newTarget.backgroundColor = [UIColor redColor]; // شكل الهدف
+    [[UIApplication sharedApplication].keyWindow addSubview:newTarget];
+    [targets addObject:newTarget];
+}
+%hook SpringBoard
+- (void)applicationDidFinishLaunching:(id)application {
+    %orig;
+    // تأخير بسيط لضمان تحميل واجهة المستخدم
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        showMenu();
+    });
+}
+%end
