@@ -16,13 +16,19 @@ jobs:
       - name: Setup Theos
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential clang ldid git
+          sudo apt-get install -y build-essential clang git
+          # تحميل أداة التوقيع ldid يدوياً لتجاوز الخطأ
+          curl -LO https://github.com/theos/ldid/raw/master/ldid
+          chmod +x ldid
+          sudo mv ldid /usr/bin/
+          # تحميل بيئة Theos
           git clone --recursive https://github.com/theos/theos.git /home/runner/theos
 
       - name: Build Tweak
         run: |
           export THEOS=/home/runner/theos
           export PATH=$THEOS/bin:$PATH
+          make clean
           make package
 
       - name: Upload Artifact
