@@ -17,18 +17,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential clang git
-          # تحميل أداة التوقيع ldid يدوياً لتجاوز الخطأ
+          # تحميل أداة التوقيع ldid ومعالجتها لتكون قابلة للتنفيذ
           curl -LO https://github.com/theos/ldid/raw/master/ldid
           chmod +x ldid
           sudo mv ldid /usr/bin/
-          # تحميل بيئة Theos
+          # تحميل بيئة Theos بالكامل
           git clone --recursive https://github.com/theos/theos.git /home/runner/theos
 
       - name: Build Tweak
         run: |
           export THEOS=/home/runner/theos
           export PATH=$THEOS/bin:$PATH
-          make clean
+          # بناء الأداة مباشرة بدون استخدام make clean لتجنب الأخطاء
+          make
           make package
 
       - name: Upload Artifact
