@@ -3,13 +3,19 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/theos/theos/sdks:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build
+      - name: Install Dependencies
         run: |
-          # التوجه مباشرة للبناء دون الحاجة لتحميل الـ SDK يدوياً
+          sudo apt-get update
+          sudo apt-get install -y build-essential clang ldid libssl-dev
+      - name: Setup Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git /home/runner/theos
+      - name: Build Tweak
+        run: |
+          export THEOS=/home/runner/theos
+          export PATH=$THEOS/bin:$PATH
           make clean
           make
           make package
