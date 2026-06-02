@@ -3,20 +3,13 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/theos/theos/sdks:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git /home/runner/theos
-          # تحميل وتثبيت الـ SDK بطريقة مضمونة
-          mkdir -p /home/runner/theos/sdks
-          curl -L -o sdk.tar.xz https://github.com/theos/sdks/releases/latest/download/iPhoneOS16.5.sdk.tar.xz
-          tar -xf sdk.tar.xz -C /home/runner/theos/sdks/
       - name: Build
         run: |
-          export THEOS=/home/runner/theos
-          export PATH=$THEOS/bin:$PATH
-          # التوجه للمسار والتأكد من البناء
+          # التوجه مباشرة للبناء دون الحاجة لتحميل الـ SDK يدوياً
           make clean
           make
           make package
